@@ -1,7 +1,8 @@
 'use strict';
 import Hapi from '@hapi/hapi';
+import { Connection } from 'typeorm';
 
-const init = async () => {
+const init = async (connection :Connection) => {
 
     const server = Hapi.server({
         port: 3001,
