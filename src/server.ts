@@ -1,6 +1,7 @@
 'use strict';
 import Hapi from '@hapi/hapi';
 import { Connection } from 'typeorm';
+import namesRoute from './routes/names'
 
 const init = async (connection :Connection) => {
 
@@ -9,14 +10,7 @@ const init = async (connection :Connection) => {
         host: 'localhost'
     });
 
-    server.route({
-        method: 'GET',
-        path: '/',
-        handler: (request, h) => {
-
-            return 'Hello World!';
-        }
-    });
+    namesRoute.registerRoute(server, connection)
 
     await server.start();
     console.log('Server running on %s', server.info.uri);
