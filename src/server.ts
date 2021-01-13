@@ -2,6 +2,7 @@
 import Hapi from '@hapi/hapi';
 import { Connection } from 'typeorm';
 import namesRoute from './routes/names'
+import queryFunctions from './extensions/queryFunctions'
 
 const init = async (connection :Connection) => {
 
@@ -11,6 +12,7 @@ const init = async (connection :Connection) => {
     });
 
     namesRoute.registerRoute(server, connection)
+    queryFunctions.onPostHandler(server)
 
     await server.start();
     console.log('Server running on %s', server.info.uri);
