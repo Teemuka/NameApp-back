@@ -2,7 +2,7 @@
 import Hapi from '@hapi/hapi';
 import { Connection } from 'typeorm';
 import namesRoute from './routes/names'
-import queryFunctions from './extensions/queryFunctions'
+import queryFunctions from './extensions/loadQueryFunctions'
 
 const init = async (connection :Connection) => {
 

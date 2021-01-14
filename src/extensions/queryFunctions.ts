@@ -1,7 +1,5 @@
-'use strict'
-import Hapi from '@hapi/hapi';
+import assert from "assert"
 import Boom from '@hapi/boom'
-import assert from 'assert';
 
 const sort = (objArr :object[], queryString :string) => {
 
@@ -30,46 +28,8 @@ const sort = (objArr :object[], queryString :string) => {
     return sorted
 }
 
-
-const queryFunctions = (request :Hapi.Request, h :Hapi.ResponseToolkit) => {
-
-    const query = request.query
-    const functions = Object.keys(query)
-
-    if (functions.length) {
-
-        const source = (h.request.response as Hapi.ResponseObject).source
-
-        if (Array.isArray(source)) {
-
-            let data: object[] = []
-
-            for (const funcName of functions) {
-
-                switch (funcName) {
-                    case 'sort':
-                        data = sort(source, query[funcName])
-                        break;
-                
-                    default:
-                        return Boom.notImplemented(`Function ${funcName} does not found`)
-                }
-            }
-
-            return h.response(data)
-
-        } else {
-            return Boom.notImplemented(`Query functions are supported for multi-values only`)
-        }
-    }
-
-    return h.continue
-
+const functions :{[key :string] : (objArr :object[], queryString :string) => object[]} = {
+    sort
 }
 
-export default {
-    
-    onPostHandler : (server : Hapi.Server) => {
-        server.ext('onPostHandler', queryFunctions)
-    }
-}
+export default functions
