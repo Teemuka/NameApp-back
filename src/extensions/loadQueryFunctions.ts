@@ -17,10 +17,12 @@ const checkQuery = (request :Hapi.Request, h :Hapi.ResponseToolkit) => {
             let data: object[] | object = source
 
             for (const key of keys) {
-                if (query[key]) {
+                if (query[key] && !Array.isArray(query[key])) {
 
                     if (queryFunctions.hasOwnProperty(key)) {
                         data = queryFunctions[key](source, query[key])
+                    } else if ((source[0] as {[key :string] : any})[key]) {
+                        data = queryFunctions.filter(source, `${key}<>${query[key]}`)
                     }
                 }
             }
