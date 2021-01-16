@@ -1,7 +1,7 @@
 import assert from "assert"
 import Boom from '@hapi/boom'
 
-const sort = (objArr :object[], queryString :string) => {
+const sort = (objArr :{[key :string] : any}[], queryString :string) => {
 
     const regex = /^\('(.+?)','((asc)|(desc))'\)$/
 
@@ -28,8 +28,38 @@ const sort = (objArr :object[], queryString :string) => {
     return sorted
 }
 
-const functions :{[key :string] : (objArr :object[], queryString :string) => object[]} = {
-    sort
+const filter = (objArr :{[key :string] : any}[], queryString :string) => { 
+
+    const [queryVariable, queryValue] = queryString.split("<>")
+
+
+    return objArr.filter((obj) => obj[queryVariable].toLowerCase() == queryValue.toLocaleLowerCase())
+
+
+}
+
+const sum = (objArr :{[key :string] : any}[], queryString :string) => { 
+
+    if (!isNaN(objArr[0][queryString])) {
+
+        return objArr.reduce((prev, curr) => {
+
+            prev[`sumOf_${queryString}`] += curr[queryString]
+
+            return prev
+        }, {[`sumOf_${queryString}`] : 0})
+
+
+    } else {
+        throw Boom.conflict('Sum is supported for numeric values only')
+    }
+}
+
+
+const functions :{[key :string] : (objArr :{[key :string] : any}[], queryString :string) => object[] | object} = {
+    sort,
+    filter,
+    sum
 }
 
 export default functions
