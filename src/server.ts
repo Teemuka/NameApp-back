@@ -1,19 +1,29 @@
 'use strict';
-import Hapi from '@hapi/hapi';
+import Hapi from '@hapi/hapi'
+import Inert from "@hapi/inert"
+import { Connection, In } from 'typeorm';
+import namesRoute from './routes/names'
+import queryFunctions from './extensions/loadQueryFunctions'
 
-const init = async () => {
+const init = async (connection :Connection) => {
 
     const server = Hapi.server({
         port: 3001,
         host: 'localhost'
     });
 
+    await server.register(Inert as any)
+
+    namesRoute.registerRoute(server, connection)
+    queryFunctions.onPostHandler(server)
+
     server.route({
         method: 'GET',
-        path: '/',
-        handler: (request, h) => {
-
-            return 'Hello World!';
+        path: '/{path*}',
+        handler: {
+            directory: {
+                path: 'client/build',
+            }
         }
     });
 
