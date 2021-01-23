@@ -33,12 +33,12 @@ export default {
         server.route([
             {
                 method: 'GET',
-                path: '/names',
+                path: '/api/names',
                 handler : getNameshandler
             },
             {
                 method: 'POST',
-                path: '/names',
+                path: '/api/names',
                 handler : postNameshandler
             },
 
