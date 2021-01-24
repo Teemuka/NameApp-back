@@ -8,8 +8,8 @@ import queryFunctions from './extensions/loadQueryFunctions'
 const init = async (connection :Connection) => {
 
     const server = Hapi.server({
-        port: 3001,
-        host: 'localhost'
+        port: process.env.PORT ? +process.env.PORT : 3001,
+        host: process.env.DEV === 'true' ? 'localhost' : '0.0.0.0'
     });
 
     await server.register(Inert as any)
